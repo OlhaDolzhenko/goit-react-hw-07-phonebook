@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import shortid from 'shortid';
-import phonebookActions from '../../redux/phonebook/phonebook-actions';
+import { getContacts } from '../../redux/phonebook/phonebook-selectors';
+import phonebookOperations from '../../redux/phonebook/phonebook-operations';
 import styles from './ContactForm.module.css';
 
 function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -35,13 +35,19 @@ function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    const newContact = {
-      id: shortid.generate(),
-      name: name,
-      number: number,
-    };
-
-    dispatch(phonebookActions.addContact(newContact));
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      alert(`${name} is already in contacts`);
+    } else {
+      const newContact = {
+        name: name,
+        phone: number,
+      };
+      dispatch(phonebookOperations.addContact(newContact));
+    }
     reset();
   };
 
@@ -83,11 +89,5 @@ function ContactForm() {
 ContactForm.propTypes = {
   onSubmit: PropTypes.func,
 };
-
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: newContact => dispatch(phonebookActions.addContact(newContact)),
-// });
-
-// export default connect(null, mapDispatchToProps)(ContactForm);
 
 export default ContactForm;

@@ -4,7 +4,7 @@ import styles from './ContactsListItem.module.css';
 const ContactsListItem = ({ contact, onDelete }) => {
   return (
     <li className={styles.listItem} key={contact.id}>
-      {contact.name}:<span className={styles.number}>{contact.number}</span>
+      {contact.name}:<span className={styles.number}>{contact.phone}</span>
       <button
         className={styles.btn}
         onClick={() => onDelete(contact.id)}
@@ -21,7 +21,7 @@ ContactsListItem.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string,
-      number: PropTypes.string,
+      phone: PropTypes.string,
     }),
   ),
   onDelete: PropTypes.func,
